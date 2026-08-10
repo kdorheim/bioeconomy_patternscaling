@@ -39,8 +39,10 @@ def multi_partition(text, separators):
 # Make an empty data frame to save the results in
 data = pd.DataFrame()
 
-# Find the historical global files to take a look at
+# Find the historical global files to take a look at, note that is should only
+# be the npp variable shere
 nc_files = [f for f in os.listdir(DATA_DIR + "global") if f.endswith(".nc")]
+nc_files = [x for x in nc_files if "npp" in x]
 
 for f in nc_files:
     if "rh" in f:
@@ -74,23 +76,24 @@ ax = sns.lineplot(
 )
 
 ax.set_ylabel('Global NPP Pg C')
-plt.savefig(FIG_DIR + "global_npp_map.png", dpi=300, bbox_inches='tight')
-plt.show()
+plt.savefig(FIG_DIR + "global_npp.png", dpi=300, bbox_inches='tight')
 
 summary_table = data.groupby(['experiment', 'ensemble'])['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
 summary_table.to_csv(FIG_DIR + 'global_npp.csv', float_format='%.2e')
 
 # What is the range of the grid cell values historically & in the future???
-files = [DATA_DIR + "field/CCCma_CanESM5_historical_r10i1p1f1_Lmon_npp_gn_v20190429_field.nc",
-         DATA_DIR + "field/CCCma_CanESM5_historical_r4i1p1f1_Lmon_npp_gn_v20190429_field.nc",
-         DATA_DIR + "field/CCCma_CanESM5_ssp585_r10i1p1f1_Lmon_npp_gn_v20190429_field.nc",
-         DATA_DIR + "field/CCCma_CanESM5_ssp585_r4i1p1f1_Lmon_npp_gn_v20190429_field.nc"]
+files = []
+for f in os.listdir(os.path.join(DATA_DIR, "field")):
+    files.append(os.path.join(DATA_DIR, "field", f))
+files = [f for f in files if "npp" in f]
+
+# This step is kind of slow for some reason.
 field_data = my_fxns.get_hist_data(files)
 field_data = field_data.dropna()
 
 to_plot = field_data
-to_plot['exp_en'] = to_plot['experiment'] + '_' +  to_plot['ensemble']
+to_plot['exp_en'] = to_plot['experiment'] + '_' + to_plot['ensemble']
 title_name = to_plot.metric[0] + " " + to_plot.variable[0] + " (Pg C)"
 metric_name = to_plot.metric[0]
 
@@ -104,20 +107,18 @@ sns.displot(
 )
 plt.xlabel(metric_name)
 plt.title(title_name)
-plt.savefig(FIG_DIR + "grid_npp_hist.png", dpi=300, bbox_inches='tight')
-plt.show()
+plt.savefig(FIG_DIR + "npp_hist.png", dpi=300, bbox_inches='tight')
+
 
 summary_table = field_data.groupby(['experiment', 'ensemble'])['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
-summary_table.to_csv(FIG_DIR + 'grid_npp.csv', float_format='%.2e')
+summary_table.to_csv(FIG_DIR + 'mean_npp.csv', float_format='%.2e')
 
 
 
 # Now let's just make some maps of the Mean grid cell
 d1 = xr.open_dataset(DATA_DIR + "field/CCCma_CanESM5_historical_r10i1p1f1_Lmon_npp_gn_v20190429_field.nc")
 d2 = xr.open_dataset(DATA_DIR + "field/CCCma_CanESM5_ssp585_r10i1p1f1_Lmon_npp_gn_v20190429_field.nc")
-
-# Since we are interested in the RMSE we need to take the sqrt here
 d1 = d1.mean(dim='time')
 d2 = d2.mean(dim='time')
 
@@ -144,7 +145,7 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP Mean (PgC)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_Mean_npp_map.png", dpi=300, bbox_inches='tight')
-plt.show()
+#plt.show()
 
 
 
@@ -166,7 +167,7 @@ to_plot["metric"] = "RMSE"
 
 title_name = to_plot.metric[0] + " " + to_plot.variable[0] + " (Pg C)"
 metric_name = to_plot.metric[0]
-
+plt.figure(figsize=(8, 6))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -176,8 +177,8 @@ sns.histplot(
 )
 plt.xlabel(metric_name)
 plt.title(title_name)
-plt.savefig(FIG_DIR + "self_RMSE_npp.png", dpi=300, bbox_inches='tight')
-plt.show()
+plt.savefig(FIG_DIR + "self_RMSE_npp_hist.png", dpi=300, bbox_inches='tight')
+
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -215,7 +216,7 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP RMSE (PgC)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_RMSE_npp_map.png", dpi=300, bbox_inches='tight')
-plt.show()
+#plt.show()
 
 
 
@@ -232,7 +233,7 @@ to_plot["metric"] = "NS (<1)"
 
 title_name = to_plot.metric[0] + " " + to_plot.variable[0]
 metric_name = to_plot.metric[0]
-
+plt.figure(figsize=(8, 6))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -242,8 +243,7 @@ sns.histplot(
 )
 plt.xlabel(metric_name)
 plt.title(title_name)
-plt.savefig(FIG_DIR + "self_NS_npp.png", dpi=300, bbox_inches='tight')
-plt.show()
+plt.savefig(FIG_DIR + "self_NS_npp_hist.png", dpi=300, bbox_inches='tight')
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -278,12 +278,12 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP NS (<1)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_NS_npp_map.png", dpi=300, bbox_inches='tight')
-plt.show()
+#plt.show()
 
 
 
 # NS -Antartica ----------------------------------------------------------------------------------------------------
-# Now let's take a loko at the NS
+# Now let's take a looK at the NS after we drop Antartica
 files = [DATA_DIR+"error_metrics/CCCma_CanESM5_historical_r10i1p1f1_Lmon_npp_gn_v20190429_ns.nc",
          DATA_DIR+"error_metrics/CCCma_CanESM5_historical_r4i1p1f1_Lmon_npp_gn_v20190429_ns.nc",
          DATA_DIR+"error_metrics/CCCma_CanESM5_ssp585_r10i1p1f1_Lmon_npp_gn_v20190429_ns.nc",
@@ -296,6 +296,7 @@ to_plot["metric"] = "NS (<1)"
 title_name = to_plot.metric[0] + " " + to_plot.variable[0]
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 6))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -306,7 +307,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "self_NS_npp_drop_antartica.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -344,7 +344,7 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP NS (<1)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_NS_npp_map_drop_antartic.png", dpi=300, bbox_inches='tight')
-plt.show()
+#plt.show()
 
 
 
@@ -363,6 +363,7 @@ to_plot["metric"] = "ctbias (~0)"
 title_name = to_plot.metric[0] + " " + to_plot.variable[0]
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 6))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -372,8 +373,8 @@ sns.histplot(
 )
 plt.xlabel(metric_name)
 plt.title(title_name)
-plt.savefig(FIG_DIR + "self_ctbias_npp.png", dpi=300, bbox_inches='tight')
-plt.show()
+plt.savefig(FIG_DIR + "self_ctbias_npp_hist.png", dpi=300, bbox_inches='tight')
+
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -411,10 +412,10 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP ctbias (~0)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_ctbias_npp_map.png", dpi=300, bbox_inches='tight')
-plt.show()
+
 
 # ctvar ----------------------------------------------------------------------------------------------------
-# Now let's take a loko at the ctbias
+# Now let's take a look at the ctbias
 files = [DATA_DIR+"error_metrics/CCCma_CanESM5_historical_r10i1p1f1_Lmon_npp_gn_v20190429_ctvar.nc",
          DATA_DIR+"error_metrics/CCCma_CanESM5_historical_r4i1p1f1_Lmon_npp_gn_v20190429_ctvar.nc",
          DATA_DIR+"error_metrics/CCCma_CanESM5_ssp585_r10i1p1f1_Lmon_npp_gn_v20190429_ctvar.nc",
@@ -427,6 +428,7 @@ to_plot["metric"] = "ctvar (~1)"
 title_name = to_plot.metric[0] + " " + to_plot.variable[0]
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 6))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -437,7 +439,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "self_ctvar_npp.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -475,11 +476,3 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP ctvar (~1)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_ctvar_npp_map.png", dpi=300, bbox_inches='tight')
-plt.show()
-
-
-
-
-
-
-

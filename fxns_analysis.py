@@ -53,6 +53,56 @@ def get_meta_data2(f):
     return df
 
 
+def get_meta_data3(f):
+    """
+    Extract meta data from teh file name.
+
+    :param f: the full processed file name
+    :return: data frame of file meeta data infromation ie model name, ensemble member ect.
+    """
+    pattern = re.compile(
+        r'(?P<variable>[^.]+)_'
+        r'(?P<ensemble>[^_]+)_'
+        r'(?P<metric>[^.]+)_'
+        r'(?P<mask>[^.]+)\.nc'
+    )
+
+    match = pattern.search(Path(f).name)
+
+    df = pd.DataFrame([match.groupdict()])
+
+    return df
+
+
+
+def get_hist_data3(files):
+    """
+    Get the data for easy histogram plotting
+
+    :param files: array of file names
+    :return: data frame of results that are ready to be ploted in a histogram...
+    """
+    # create an empty data frame to store the results in
+    metric_df = pd.DataFrame()
+
+    for f in files:
+        #print(f)
+        meta_data = get_meta_data3(f)
+        ds = xr.open_dataset(f)
+        # Problem is this going to be influences by all the 0 from the ocean??? may be we need a better masking step
+        # for when land area = 0....
+        data_values = ds[meta_data.variable[0]].values.flatten()
+
+        N = data_values.shape[0]
+        df_expanded = pd.concat([meta_data] * N, ignore_index=True)
+        df_expanded["value"] = data_values
+
+        metric_df = pd.concat([metric_df, df_expanded], axis=0)
+
+    metric_df = metric_df.reset_index()
+
+    return metric_df
+
 def get_hist_data2(files):
     """
     Get the data for easy histogram plotting

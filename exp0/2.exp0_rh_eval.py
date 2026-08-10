@@ -75,7 +75,6 @@ ax = sns.lineplot(
 
 ax.set_ylabel('Global rh Pg C')
 plt.savefig(FIG_DIR + "global_rh_map.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 summary_table = data.groupby(['experiment', 'ensemble'])['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -94,6 +93,7 @@ to_plot['exp_en'] = to_plot['experiment'] + '_' +  to_plot['ensemble']
 title_name = to_plot.metric[0] + " " + to_plot.variable[0] + " (Pg C)"
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 5))
 sns.displot(
     data=to_plot,
     x="value",
@@ -105,7 +105,6 @@ sns.displot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "grid_rh_hist.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 summary_table = field_data.groupby(['experiment', 'ensemble'])['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -144,11 +143,6 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("rh Mean (PgC)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_Mean_rh_map.png", dpi=300, bbox_inches='tight')
-plt.show()
-
-
-
-
 
 
 # RMSE ----------------------------------------------------------------------------------------------------
@@ -167,6 +161,7 @@ to_plot["metric"] = "RMSE"
 title_name = to_plot.metric[0] + " " + to_plot.variable[0] + " (Pg C)"
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 5))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -177,7 +172,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "self_RMSE_rh.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -215,8 +209,6 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("rh RMSE (PgC)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_RMSE_rh_map.png", dpi=300, bbox_inches='tight')
-plt.show()
-
 
 
 # NS ----------------------------------------------------------------------------------------------------
@@ -233,6 +225,7 @@ to_plot["metric"] = "NS (<1)"
 title_name = to_plot.metric[0] + " " + to_plot.variable[0]
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 5))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -243,7 +236,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "self_NS_rh.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -278,8 +270,6 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("rh NS (<1)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_NS_rh_map.png", dpi=300, bbox_inches='tight')
-plt.show()
-
 
 
 # NS -Antartica ----------------------------------------------------------------------------------------------------
@@ -296,6 +286,7 @@ to_plot["metric"] = "NS (<1)"
 title_name = to_plot.metric[0] + " " + to_plot.variable[0]
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 5))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -306,7 +297,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "self_NS_rh_drop_antartica.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -344,9 +334,6 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("rh NS (<1)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_NS_rh_map_drop_antartic.png", dpi=300, bbox_inches='tight')
-plt.show()
-
-
 
 
 # ctbias ----------------------------------------------------------------------------------------------------
@@ -363,6 +350,7 @@ to_plot["metric"] = "ctbias (~0)"
 title_name = to_plot.metric[0] + " " + to_plot.variable[0]
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 5))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -373,7 +361,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "self_ctbias_rh.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -411,7 +398,6 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("rh ctbias (~0)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_ctbias_rh_map.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 # ctvar ----------------------------------------------------------------------------------------------------
 # Now let's take a loko at the ctbias
@@ -427,6 +413,7 @@ to_plot["metric"] = "ctvar (~1)"
 title_name = to_plot.metric[0] + " " + to_plot.variable[0]
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 5))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -437,7 +424,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "self_ctvar_rh.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -475,7 +461,6 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("rh ctvar (~1)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_ctvar_rh_map.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 
 

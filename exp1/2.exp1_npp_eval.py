@@ -56,6 +56,7 @@ to_plot = pd.concat([bench_data, futu_data], ignore_index=True)
 title_name =  to_plot.metric[0] + " " + to_plot.variable[0] + " (Pg C)"
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 6))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -66,7 +67,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "fut_RMSE_npp.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 summary_table = to_plot.groupby('exp_en')['value'].describe()
 summary_table = summary_table[['mean', 'std', 'min', 'max']]
@@ -106,9 +106,6 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP RMSE (PgC)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "fut_RMSE_npp_map.png", dpi=300, bbox_inches='tight')
-plt.show()
-
-
 
 # NS ----------------------------------------------------------------------------------------------------
 # Now let's take a look at the NS, the benchmark data comes from exp0
@@ -137,6 +134,7 @@ to_plot['value'] = np.log10(to_plot['value'])
 title_name =  "log " + to_plot.metric[0] + " " + to_plot.variable[0] + " (<1)"
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 6))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -147,7 +145,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "fut_ns_npp.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 to_plot = pd.concat([bench_data, futu_data], ignore_index=True)
 summary_table = to_plot.groupby('exp_en')['value'].describe()
@@ -193,7 +190,6 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP NS (<1)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "fut_NS_npp_map.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 
 # ctbais ----------------------------------------------------------------------------------------------------
@@ -223,6 +219,7 @@ to_plot['value'] = np.log10(to_plot['value'])
 title_name = "log" + to_plot.metric[0] + " " + to_plot.variable[0] + " (~0)"
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 6))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -233,8 +230,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "fut_ctbais_npp.png", dpi=300, bbox_inches='tight')
-plt.show()
-
 
 to_plot = pd.concat([bench_data, futu_data], ignore_index=True)
 summary_table = to_plot.groupby('exp_en')['value'].describe()
@@ -272,10 +267,6 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP ctbias (~0)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "fut_ctbias_npp_map.png", dpi=300, bbox_inches='tight')
-plt.show()
-
-
-
 
 # ctvar ----------------------------------------------------------------------------------------------------
 # Now let's take a look at the NS
@@ -304,6 +295,7 @@ to_plot['value'] = np.log10(to_plot['value'])
 title_name = "log" + to_plot.metric[0] + " " + to_plot.variable[0] + " (~1)"
 metric_name = to_plot.metric[0]
 
+plt.figure(figsize=(8, 6))
 sns.histplot(
     data=to_plot,
     x="value",
@@ -314,8 +306,6 @@ sns.histplot(
 plt.xlabel(metric_name)
 plt.title(title_name)
 plt.savefig(FIG_DIR + "fut_ctvar_npp.png", dpi=300, bbox_inches='tight')
-plt.show()
-
 
 to_plot = pd.concat([bench_data, futu_data], ignore_index=True)
 summary_table = to_plot.groupby('exp_en')['value'].describe()
@@ -353,4 +343,3 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP ctvar (~1)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "fut_ctvar_npp_map.png", dpi=300, bbox_inches='tight')
-plt.show()

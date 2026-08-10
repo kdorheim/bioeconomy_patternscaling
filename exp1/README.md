@@ -1,4 +1,4 @@
 Experiment 1
 
-How do the historically trained parameters do with when we are prediciting the future npp? 
+How do the historically trained parameters do with when we are predicting the future npp? 
 

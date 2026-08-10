@@ -8,6 +8,28 @@ import xarray as xr
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
+import re
+import os
+
+def extrat_exp_ens(file_path:str):
+    # Extract the basename
+    base_name = os.path.basename(file_path)
+
+    # Extract the experiment name
+    if "historical" in base_name:
+        exp_name = "historical"
+    elif "ssp585" in base_name:
+        exp_name = "ssp585"
+    else:
+        raise Exception("Something went wrong.")
+
+    # Extract the ensemble member name
+    match = re.search(r"r\d+i\d+p\d+f\d+", base_name)
+    ens_name = match.group()
+
+    out = pd.DataFrame({"experiment": [exp_name], "ensemble": [ens_name]})
+    return out
+
 
 def fetch_nc(zstore: str):
     """
