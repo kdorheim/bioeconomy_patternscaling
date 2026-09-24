@@ -218,6 +218,24 @@ fig.suptitle("NPP RMSE (PgC)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_RMSE_npp_map.png", dpi=300, bbox_inches='tight')
 #plt.show()
 
+# How does the RMSE compare with the Mean NPP value?
+
+field1 = xr.open_dataset(DATA_DIR+"field/CCCma_CanESM5_historical_r10i1p1f1_Lmon_npp_gn_v20190429_field.nc")
+field2 = xr.open_dataset(DATA_DIR+"field/CCCma_CanESM5_ssp585_r10i1p1f1_Lmon_npp_gn_v20190429_field.nc")
+
+mean_field1 = field1.mean("time")
+mean_field2 = field2.mean("time")
+
+
+norm_err1 = d1/mean_field1
+norm_err2 = d2/mean_field2
+
+np.nanmax(norm_err1.npp.values)
+np.nanmin(norm_err1.npp.values)
+
+
+
+
 
 
 # NS ----------------------------------------------------------------------------------------------------
@@ -476,3 +494,25 @@ ax2.set_title(label2, fontsize=12)
 
 fig.suptitle("NPP ctvar (~1)", fontsize=18, y=1.00)
 plt.savefig(FIG_DIR + "self_ctvar_npp_map.png", dpi=300, bbox_inches='tight')
+
+
+
+# residuals ----------------------------------------------------------------------------------------------------
+resid1 = xr.open_dataset(DATA_DIR+"error_metrics/CCCma_CanESM5_historical_r10i1p1f1_Lmon_npp_gn_v20190429_bais.nc")
+resid2 = xr.open_dataset(DATA_DIR+"error_metrics/CCCma_CanESM5_ssp585_r10i1p1f1_Lmon_npp_gn_v20190429_bais.nc")
+
+d1 = xr.open_dataset(DATA_DIR+"field/CCCma_CanESM5_historical_r10i1p1f1_Lmon_npp_gn_v20190429_field.nc")
+d2 = xr.open_dataset(DATA_DIR+"field/CCCma_CanESM5_ssp585_r10i1p1f1_Lmon_npp_gn_v20190429_field.nc")
+
+
+np.nanmax((resid1/d1).npp.values)
+np.nanmin((resid1/d1).npp.values)
+np.nanmean((resid1/d1).npp.values)
+
+np.nanmin(d1.npp.values)
+np.nanmax(d1.npp.values)
+
+np.nanmax(resid1.npp.values)
+np.nanmin(resid1.npp.values)
+
+
