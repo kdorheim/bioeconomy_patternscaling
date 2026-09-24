@@ -1,11 +1,13 @@
 # Process carbon data files and train the LPS. This script trains on historical & ssp585
 # scenario dataa.
 
-import fxns
 import numpy as np
 import pandas as pd
 import os
 import xarray as xr
+import sys
+sys.path.append("..")
+import fxns
 
 
 # Prep where to write the processed data out to
@@ -17,6 +19,7 @@ os.makedirs(DATA_DIR+"beta", exist_ok=True)
 os.makedirs(DATA_DIR+"intercept", exist_ok=True)
 os.makedirs(DATA_DIR+"yhat", exist_ok=True)
 os.makedirs(DATA_DIR+"error_metrics", exist_ok=True)
+os.makedirs(DATA_DIR+"raw_data", exist_ok=True)
 
 
 # Read in the data frame with the files to process, we can
